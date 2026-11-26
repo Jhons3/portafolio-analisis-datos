@@ -1,0 +1,29 @@
+reclamos = [
+    # (reclamo, categoría esperada, urgencia esperada)
+    ("Me robaron la tarjeta y hay compras de $500 que no hice", "fraude", "alta"),
+    ("Hice una transferencia de $120 y no le llegó a mi mamá", "transferencias", "media"),
+    ("Quiero saber la tasa del préstamo hipotecario", "creditos", "baja"),
+    ("Me cobraron $15 de mantenimiento de cuenta que no corresponde", "cuentas", "media"),
+    ("Recibí un SMS pidiendo mi clave y creo que la di, ya no puedo entrar", "fraude", "alta"),
+    ("La app no me deja cambiar mi foto de perfil", "otro", "baja"),
+    ("Pagué mi tarjeta hace 3 días y todavía aparece la deuda de $200", "tarjetas", "media"),
+    ("Mi cuota del crédito subió sin aviso", "creditos", "media"),
+]
+
+json_ok = cat_ok = urg_ok = 0
+for reclamo, cat_esp, urg_esp in reclamos:
+    datos, crudo = clasificar_reclamo(reclamo)
+    if datos is None:
+        print("❌ JSON inválido:", reclamo, "\n   →", crudo, "\n")
+        continue
+    json_ok += 1
+    c = datos["categoria"] == cat_esp
+    u = datos["urgencia"] == urg_esp
+    cat_ok += c; urg_ok += u
+    print("✅" if (c and u) else "⚠️", reclamo)
+    print(f"   → {datos}   (esperado: {cat_esp}, {urg_esp})\n")
+
+n = len(reclamos)
+print(f"JSON válido:        {json_ok}/{n} = {json_ok/n:.0%}")
+print(f"Categoría correcta: {cat_ok}/{n} = {cat_ok/n:.0%}")
+print(f"Urgencia correcta:  {urg_ok}/{n} = {urg_ok/n:.0%}")

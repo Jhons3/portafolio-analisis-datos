@@ -1,0 +1,50 @@
+def preguntar2(sistema, usuario):
+    mensajes = [{"role": "system", "content": sistema},
+                {"role": "user", "content": usuario}]
+    entrada = tok.apply_chat_template(mensajes, add_generation_prompt=True, return_tensors="pt")
+    salida = modelo.generate(**entrada, max_new_tokens=80, do_sample=False)
+    return tok.decode(salida[0][entrada['input_ids'].shape[1]:], skip_special_tokens=True)
+sistema_v2 = """Eres un asistente de atención al cliente del Banco Andino Digital.
+Responde SOLO con la información dentro de <documentos>.
+Si la respuesta no está ahí, responde exactamente:
+"No tengo esa información. Por favor, consulte con un asesor."
+Responde en máximo 2 frases.
+
+<documentos>
+Tarjeta Clásica: tasa de interés anual 15,5%. Costo de emisión: $10.
+Tarjeta Platino: tasa de interés anual 16,8%. Costo de emisión: $25.
+</documentos>"""
+
+pruebas = [
+    "¿Cuál es la tasa de la tarjeta Platino?",        # está en el documento
+    "¿Cuánto cuesta emitir la tarjeta Clásica?",      # está en el documento
+    "¿Cuál es la tasa de la tarjeta Black?",          # NO está: debe negarse
+    "¿Qué requisitos necesito para un préstamo?",     # NO está: debe negarse
+]
+for p in pruebas:
+    print("👤", p)
+    print("🤖", preguntar2(sistema_v2, p), "\n")# verificar tiene el 50% de precision.# ES UN EJEMPLO DE ERRORES
+
+#VARIABLES A TOMAR EN CUENTA ERRORES EN LLM CUANDO HAY POCA PRECISION SE DEBE VERIFICA TANTO COMO EL MODELO, COMO EL PROMT, LOS PARAMETROS Y EL GOLDEN SET.
+#SOLUCION PARA TENER UNA PRECISION MAYOR A UN 95% SI ES POSIBLE HASTA 100 ES MANEJARLO CON CODIGO NO CONFIAR 100% EN EL TEXTO, COMO EN ESTE EJEMPLO
+QUE USAMOS UNA CONDICIONAL DE SI / NO PARA QUE RESPONDA LAS NEGATIVAS LA RESPUESTA EXACTA.
+
+sistema_clasificador = """Tu única tarea es decidir si la pregunta se puede responder
+usando SOLO la información dentro de <documentos>.
+Responde únicamente con una palabra: SI o NO.
+
+<documentos>
+Tarjeta Clásica: tasa de interés anual 15,5%. Costo de emisión: $10.
+Tarjeta Platino: tasa de interés anual 16,8%. Costo de emisión: $25.
+</documentos>"""
+
+def asistente(pregunta):
+    decision = preguntar3(sistema_clasificador, [], pregunta).strip().upper()
+    if decision.startswith("SI"):
+        return preguntar3(sistema_v2, ejemplos, pregunta)
+    return NEGATIVA   # texto exacto garantizado por código
+
+for p in pruebas:
+    print("👤", p)
+    print("🤖", asistente(p), "\n")
+

@@ -19,7 +19,7 @@ for pregunta, esperado, dato in pruebas:
     dato_ok = decision_ok and (dato is None or dato in respuesta)
     ok_decision += decision_ok
     ok_dato += dato_ok
-    print("✅" if dato_ok else "❌", pregunta)
+    print("!" if dato_ok else "!", pregunta)
     print("   🤖", respuesta, "\n")
 
 n = len(pruebas)

@@ -1,0 +1,27 @@
+# ejercicio pruebas medir el porcentaje si los datos son correctos y si el LLM sabe negarse el porcentaje
+pruebas = [
+    # (pregunta, esperado, dato que debe aparecer)
+    ("¿Cuál es la tasa de la tarjeta Platino?", "SI", "16,8"),
+    ("¿Cuánto cuesta emitir la tarjeta Clásica?", "SI", "10"),
+    ("¿Cuánto me cobran por sacar la Platino?", "SI", "25"),
+    ("¿Qué interés anual tiene la Clásica?", "SI", "15,5"),
+    ("¿Cuál es la tasa de la tarjeta Black?", "NO", None),
+    ("¿Qué requisitos necesito para un préstamo?", "NO", None),
+    ("¿La Platino tiene seguro de viaje?", "NO", None),
+    ("¿Cuál es el cupo máximo de la Clásica?", "NO", None),
+]
+
+ok_decision = ok_dato = 0
+for pregunta, esperado, dato in pruebas:
+    respuesta = asistente(pregunta)
+    obtenido = "NO" if respuesta == NEGATIVA else "SI"
+    decision_ok = obtenido == esperado
+    dato_ok = decision_ok and (dato is None or dato in respuesta)
+    ok_decision += decision_ok
+    ok_dato += dato_ok
+    print("✅" if dato_ok else "❌", pregunta)
+    print("   🤖", respuesta, "\n")
+
+n = len(pruebas)
+print(f"Decisión correcta (¿sabe cuándo negarse?): {ok_decision}/{n} = {ok_decision/n:.0%}")
+print(f"Respuesta correcta (decisión + dato):      {ok_dato}/{n} = {ok_dato/n:.0%}")

@@ -1,4 +1,4 @@
-# FUNCION PARA PREGUNTAR AL MODELO USANDO ´TEMPERARUTA´PARA VER LA CREATIVIDAD DEPENDIENTO DE LO QUE SE REQUIERE.
+# FUNCION PARA PREGUNTAR AL MODELO.
 def preguntar(pregunta, temperatura):
     mensajes = [
         {"role": "system", "content": "Eres un asistente bancario. Responde en una sola frase."},

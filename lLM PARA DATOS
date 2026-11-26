@@ -1,0 +1,5 @@
+#visualizacion de tokens de lLm
+texto = "Estimado cliente, su tarjeta de crédito tiene una tasa de interés anual."
+tokens = tok.tokenize(texto)
+print("Cantidad de tokens:", len(tokens))
+print(tokens)

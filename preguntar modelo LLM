@@ -1,0 +1,12 @@
+# FUNCION PARA PREGUNTAR AL MODELO USANDO ´TEMPERARUTA´PARA VER LA CREATIVIDAD DEPENDIENTO DE LO QUE SE REQUIERE.
+def preguntar(pregunta, temperatura):
+    mensajes = [
+        {"role": "system", "content": "Eres un asistente bancario. Responde en una sola frase."},
+        {"role": "user", "content": pregunta},
+    ]
+    entrada = tok.apply_chat_template(mensajes, add_generation_prompt=True, return_tensors="pt")
+    if temperatura == 0:
+        salida = modelo.generate(entrada, max_new_tokens=60, do_sample=False)
+    else:
+        salida = modelo.generate(entrada, max_new_tokens=60, do_sample=True, temperature=temperatura)
+    return tok.decode(salida[0][entrada.shape[1]:], skip_special_tokens=True)

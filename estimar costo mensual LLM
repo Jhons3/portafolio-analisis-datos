@@ -1,0 +1,6 @@
+#CAMBIAR VALORES DEPENDIENTO DE LO QUE SE QUIERE REALIZAR
+precio_por_millon = 3.00   # USD por millón de tokens (valor de ejemplo)
+tokens_por_consulta = 700  # pregunta + respuesta
+consultas_al_mes = 100_000
+costo = tokens_por_consulta * consultas_al_mes / 1_000_000 * precio_por_millon
+print(f"Costo mensual estimado: ${costo:,.2f}")

@@ -1,0 +1,6 @@
+#ejemplo de preguntas LLM probando la temperatura
+pregunta = "¿Qué es una tarjeta de crédito?"
+for t in [0, 1.0]:
+    print(f"\n=== Temperatura {t} ===")
+    for i in range(3):
+        print(f"{i+1}.", preguntar(pregunta, t))
